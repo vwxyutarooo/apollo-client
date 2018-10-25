@@ -1,4 +1,9 @@
 import { GraphQLError } from 'graphql';
+import {
+  ServerError,
+  ServerParseError,
+  ClientParseError,
+} from 'apollo-link-http-common';
 
 export function isApolloError(err: Error): err is ApolloError {
   return err.hasOwnProperty('graphQLErrors');
@@ -32,7 +37,12 @@ const generateErrorMessage = (err: ApolloError) => {
 export class ApolloError extends Error {
   public message: string;
   public graphQLErrors: GraphQLError[];
-  public networkError: Error | null;
+  public networkError:
+    | Error
+    | ServerError
+    | ServerParseError
+    | ClientParseError
+    | null;
 
   // An object that can be used to provide some additional information
   // about an error, e.g. specifying the type of error this is. Used
